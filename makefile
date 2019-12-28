@@ -8,10 +8,10 @@ all: control.o write.o
 	make control.o
 	make write.o
 
-control.o: control.c music.h
+control.o: control.c
 	$(CC) -c control.c
 
-write.o: write.c write.h
+write.o: write.c
 	$(CC) -c write.c
 
 memcheck:
