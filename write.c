@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/shm.h>
+#include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -26,7 +27,7 @@ int main(){
   errcheck("getting semaphore");
   char text[1024];
   fgets(text, 1024, stdin);
-  int fd = open("test.txt", WRONLY);
+  int fd = open("test.txt", O_WRONLY);
   write(fd, text, strlen(text));
   write(fd, "\n", 1);
   sb.sem_op = 1;

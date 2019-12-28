@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/shm.h>
+#include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -57,7 +58,6 @@ int main(int argc, char * argv[]){
     errcheck("getting semaphore");
     shmctl(sem, IPC_RMID, 0);
     errcheck("removing semaphore");
-    )
   }
   else if(!strcmp(argv[1], "-v")){
     fd = open("text.txt", O_RDONLY | O_TRUNC);
@@ -65,7 +65,7 @@ int main(int argc, char * argv[]){
     char text[1024];
     read(fd, text, 1024);
     printf("%s\n", text);
-    closed(fd);
+    close(fd);
   }
   else {
     printf("ERROR\n");
