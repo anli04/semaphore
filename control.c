@@ -43,7 +43,7 @@ int main(int argc, char * argv[]){
     close(fd);
   }
   else if(!strcmp(argv[1], "-r")){
-    fd = open("text.txt", O_RDONLY | O_TRUNC);
+    FILE* f = fopen("text.txt", "r");
     errcheck("opening file");
     struct sembuf sb;
     sb.sem_num = 0;
@@ -51,10 +51,13 @@ int main(int argc, char * argv[]){
     printf("getting in...\n");
     semop(sem, &sb, 1);
     errcheck("getting semaphore");
-    char story[SIZE];
-    read(fd, story, SIZE);
-    close(fd);
     printf("The Story:\n%s\n", story);
+    char line[SIZE];
+    while (fgets(line, sizeof(line), f)) {
+      *strchr(line, '\n') = 0;
+      printf("%s\n", line);
+    }
+    fclose(f);
     shm = shmget(KEY, SIZE, 0);
     errcheck("getting shared memory");
     shmctl(shm, IPC_RMID, 0);
@@ -66,12 +69,15 @@ int main(int argc, char * argv[]){
     printf("Removal complete\n");
   }
   else if(!strcmp(argv[1], "-v")){
-    fd = open("text.txt", O_RDONLY | O_TRUNC);
+    FILE* f = fopen("text.txt", "r");
     errcheck("opening file");
-    char text[SIZE];
-    read(fd, text, SIZE);
-    printf("The story so far:\n%s\n", text);
-    close(fd);
+    printf("The story so far:\n");
+    char line[SIZE];
+    while (fgets(line, sizeof(line), f)) {
+      *strchr(line, '\n') = 0;
+      printf("%s\n", line);
+    }
+    fclose(f);
   }
   else {
     printf("ERROR\n");
