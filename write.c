@@ -44,7 +44,7 @@ int main(){
   sb.sem_op = 1;
   semop(sem, &sb, 1);
   errcheck("updating semaphore");
-  shmdt(shm);
+  shmdt(mem);
   errcheck("detaching shared memory");
   return 0;
 }
