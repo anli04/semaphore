@@ -61,6 +61,7 @@ int main(int argc, char * argv[]){
     }
     printf("\n");
     fclose(f);
+    fclose(fopen("text.txt", "w"));
     shm = shmget(KEY, SIZE, 0);
     errcheck("getting shared memory");
     shmctl(shm, IPC_RMID, 0);
