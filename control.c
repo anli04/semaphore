@@ -38,7 +38,8 @@ int main(int argc, char * argv[]){
     us.val = 1;
     semctl(sem, 0, SETVAL, us);
     errcheck("setting semaphore");
-    fd = open("text.txt", O_CREAT, 0644);
+    fd = open("text.txt", O_CREAT | O_EXCL, 0644);
+    if (errno == EEXIST) errno = 0;
     errcheck("creating file");
     close(fd);
   }
