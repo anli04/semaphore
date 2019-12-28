@@ -56,7 +56,7 @@ int main(int argc, char * argv[]){
     sb.sem_op = -1;
     semop(sem, &sb, 1);
     errcheck("getting semaphore");
-    shmctl(sem, IPC_RMID, 0);
+    semctl(sem, IPC_RMID, 0);
     errcheck("removing semaphore");
   }
   else if(!strcmp(argv[1], "-v")){
