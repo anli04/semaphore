@@ -4,15 +4,13 @@ else
 	CC = gcc
 endif
 
-all: control.o write.o
-	make control.o
-	make write.o
+all: control write
 
-control.o: control.c
-	$(CC) -c control.c
+control: control.c
+	$(CC) control control.c
 
-write.o: write.c
-	$(CC) -c write.c
+write: write.c
+	$(CC) write write.c
 
 memcheck:
 	valgrind --leak-check=yes ./test
