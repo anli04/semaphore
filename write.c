@@ -36,7 +36,7 @@ int main(){
   fgets(mem, SIZE, stdin);
   *strchr(mem, '\n') = 0;
   strcpy(text, mem);
-  int fd = open("text.txt", O_WRONLY);
+  int fd = open("text.txt", O_WRONLY | O_APPEND);
   errcheck("opening file");
   write(fd, text, strlen(text));
   write(fd, "\n", 1);
