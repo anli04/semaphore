@@ -45,6 +45,8 @@ int main(int argc, char * argv[]){
   else if(!strcmp(argv[1], "-r")){
     FILE* f = fopen("text.txt", "r");
     errcheck("opening file");
+    sem = semget(KEY, 1, 0);
+    errcheck("getting semaphore identifier");
     struct sembuf sb;
     sb.sem_num = 0;
     sb.sem_op = -1;
@@ -62,8 +64,6 @@ int main(int argc, char * argv[]){
     errcheck("getting shared memory");
     shmctl(shm, IPC_RMID, 0);
     errcheck("removing shared memory");
-    sem = semget(KEY, 1, 0);
-    errcheck("getting semaphore identifier");
     semctl(sem, IPC_RMID, 0);
     errcheck("removing semaphore");
     printf("Removal complete\n");
