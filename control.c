@@ -26,17 +26,18 @@ int main(int argc, char * argv[]){
   int shm;
   int sem;
   int fd;
-  //char * mem;
+  if(argc < 2){
+    printf("Error: missing flag\n");
+    return 0;
+  }
   if (!strcmp(argv[1], "-c")){
     shm = shmget(KEY, SIZE, IPC_CREAT | 0644);
     errcheck("creating shared memory");
-    /*mem = shmat(shm, NULL, 0);
-    errcheck("attaching shared memory");*/
     sem = semget(KEY, 1, IPC_CREAT | 0644);
     errcheck("creating semaphore");
-    union semun us;
-    us.val = 1;
-    semctl(sem, 0, SETVAL, us);
+    union semun s;
+    s.val = 1;
+    semctl(sem, 0, SETVAL, s);
     errcheck("setting semaphore");
     fd = open("text.txt", O_CREAT | O_EXCL, 0644);
     if (errno == EEXIST) errno = 0;
@@ -44,8 +45,6 @@ int main(int argc, char * argv[]){
     close(fd);
   }
   else if(!strcmp(argv[1], "-r")){
-    FILE* f = fopen("text.txt", "r");
-    errcheck("opening file");
     sem = semget(KEY, 1, 0);
     errcheck("getting semaphore");
     struct sembuf sb;
@@ -54,6 +53,8 @@ int main(int argc, char * argv[]){
     printf("waiting...\n");
     semop(sem, &sb, 1);
     errcheck("getting semaphore");
+    FILE* f = fopen("text.txt", "r");
+    errcheck("opening file");
     printf("The Story:\n");
     char line[SIZE];
     while (fgets(line, sizeof(line), f)) {
