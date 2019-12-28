@@ -38,19 +38,20 @@ int main(int argc, char * argv[]){
     us.val = 1;
     semctl(sem, 0, SETVAL, us);
     errcheck("setting semaphore");
-    fd = open("text.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    fd = open("text.txt", O_CREAT, 0644);
     errcheck("creating file");
     close(fd);
   }
   else if(!strcmp(argv[1], "-r")){
     FILE* f = fopen("text.txt", "r");
     errcheck("opening file");
+    int sem;
     sem = semget(KEY, 1, 0);
-    errcheck("getting semaphore identifier");
+    errcheck("getting semaphore");
     struct sembuf sb;
     sb.sem_num = 0;
     sb.sem_op = -1;
-    printf("getting in...\n");
+    printf("waiting...\n");
     semop(sem, &sb, 1);
     errcheck("getting semaphore");
     printf("The Story:\n");

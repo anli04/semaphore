@@ -27,7 +27,7 @@ int main(){
   struct sembuf sb;
   sb.sem_num = 0;
   sb.sem_op = -1;
-  printf("getting in...\n");
+  printf("getting in... (don't type until \"Your addition\" appears)\n");
   semop(sem, &sb, 1);
   errcheck("getting semaphore");
   printf("Last addition:\n%s\n", mem);
