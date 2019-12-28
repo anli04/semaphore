@@ -46,7 +46,6 @@ int main(int argc, char * argv[]){
   else if(!strcmp(argv[1], "-r")){
     FILE* f = fopen("text.txt", "r");
     errcheck("opening file");
-    int sem;
     sem = semget(KEY, 1, 0);
     errcheck("getting semaphore");
     struct sembuf sb;
