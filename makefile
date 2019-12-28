@@ -7,10 +7,10 @@ endif
 all: control write
 
 control: control.c
-	$(CC) cc -o control control.c
+	$(CC) -o control control.c
 
 write: write.c
-	$(CC) cc -o write write.c
+	$(CC) -o write write.c
 
 memcheck:
 	valgrind --leak-check=yes ./test
