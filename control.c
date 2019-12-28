@@ -53,12 +53,13 @@ int main(int argc, char * argv[]){
     printf("getting in...\n");
     semop(sem, &sb, 1);
     errcheck("getting semaphore");
-    printf("The Story:\n%s\n", story);
+    printf("The Story:\n");
     char line[SIZE];
     while (fgets(line, sizeof(line), f)) {
       *strchr(line, '\n') = 0;
       printf("%s\n", line);
     }
+    printf("\n");
     fclose(f);
     shm = shmget(KEY, SIZE, 0);
     errcheck("getting shared memory");
