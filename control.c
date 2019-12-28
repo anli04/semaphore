@@ -65,7 +65,6 @@ int main(int argc, char * argv[]){
     }
     printf("\n");
     fclose(f);
-    close(open("story", O_WRONLY | O_TRUNC));
     shm = shmget(KEY, SIZE, 0);
     errcheck("getting shared memory");
     shmctl(shm, IPC_RMID, 0);
