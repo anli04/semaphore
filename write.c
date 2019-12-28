@@ -10,35 +10,48 @@
 #include <fcntl.h>
 
 #define KEY 1432476
+#define SIZE 1024
 
-void errcheck();
+void errcheck(char * m);
 
 int main(){
   int shm;
-  shm = shmget(KEY, 1024, 0);
+  shm = shmget(KEY, SIZE, 0);
   errcheck("accessing shared memory");
+  char * mem;
+  mem = shmat(shm, 0, 0);
+  errcheck("attaching shared memory");
   int sem;
   sem = semget(KEY, 1, 0);
   errcheck("getting semaphore");
   struct sembuf sb;
   sb.sem_num = 0;
   sb.sem_op = -1;
+  printf("getting in...\n");
   semop(sem, &sb, 1);
   errcheck("getting semaphore");
-  char text[1024];
-  fgets(text, 1024, stdin);
+  printf("Last addition:\n%s\n", mem);
+  printf("Your addition:\n");
+  char text[SIZE];
+  fgets(mem, SIZE, stdin);
+  *strchr(mem, '\n') = 0;
+  strcpy(text, mem);
   int fd = open("test.txt", O_WRONLY);
+  errcheck("opening file");
   write(fd, text, strlen(text));
   write(fd, "\n", 1);
+  errcheck("writing to file");
   sb.sem_op = 1;
   semop(sem, &sb, 1);
   errcheck("updating semaphore");
+  shmdt(shm);
+  errcheck("detaching shared memory");
   return 0;
 }
 
-void errcheck(){
+void errcheck(char * m){
   if (errno){
-    printf("Error: %d - %s\n", errno, strerror(errno));
+    printf("Error %s: %d - %s\n", m, errno, strerror(errno));
     errno = 0;
   }
 }

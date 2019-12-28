@@ -10,6 +10,7 @@
 #include <fcntl.h>
 
 #define KEY 1432476
+#define SIZE 1024
 
 union semun {
   int              val;    /* Value for SETVAL */
@@ -27,7 +28,7 @@ int main(int argc, char * argv[]){
   int fd;
   //char * mem;
   if (!strcmp(argv[1], "-c")){
-    shm = shmget(KEY, 1024, IPC_CREAT | 0644);
+    shm = shmget(KEY, SIZE, IPC_CREAT | 0644);
     errcheck("creating shared memory");
     /*mem = shmat(shm, NULL, 0);
     errcheck("attaching shared memory");*/
@@ -44,8 +45,13 @@ int main(int argc, char * argv[]){
   else if(!strcmp(argv[1], "-r")){
     fd = open("text.txt", O_RDONLY | O_TRUNC);
     errcheck("opening file");
-
-    shm = shmget(KEY, 1024, 0);
+    struct sembuf sb;
+    sb.sem_num = 0;
+    sb.sem_op = -1;
+    printf("getting in...\n");
+    semop(sem, &sb, 1);
+    errcheck("getting semaphore");
+    shm = shmget(KEY, SIZE, 0);
     errcheck("getting shared memory");
     shmctl(shm, IPC_RMID, 0);
     errcheck("removing shared memory");
@@ -58,13 +64,14 @@ int main(int argc, char * argv[]){
     errcheck("getting semaphore");
     semctl(sem, IPC_RMID, 0);
     errcheck("removing semaphore");
+    printf("Removal complete\n");
   }
   else if(!strcmp(argv[1], "-v")){
     fd = open("text.txt", O_RDONLY | O_TRUNC);
     errcheck("opening file");
-    char text[1024];
-    read(fd, text, 1024);
-    printf("%s\n", text);
+    char text[SIZE];
+    read(fd, text, SIZE);
+    printf("The story so far:\n%s\n", text);
     close(fd);
   }
   else {
