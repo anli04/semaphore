@@ -46,6 +46,7 @@ int main(){
   errcheck("updating semaphore");
   shmdt(mem);
   errcheck("detaching shared memory");
+  close(fd);
   return 0;
 }
 
